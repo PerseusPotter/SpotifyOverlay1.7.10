@@ -1,0 +1,21 @@
+{
+	"modListVersion": 2,
+	"modList": [{
+		"modid": "${modId}",
+		"name": "${modName}",
+		"description": "spotify overlay for 1.7.10, for the plinker\n(ported from chicktils)",
+		"version": "${modVersion}",
+		"mcversion": "${minecraftVersion}",
+		"url": "https://github.com/Ch1ck3nNeedsRNG/SpotifyOverlay1.7.10",
+		"updateUrl": "",
+		"authorList": ["Ch1ck3nNeedsRNG"],
+		"credits": "",
+		"logoFile": "",
+		"screenshots": [],
+		"parent": "",
+		"requiredMods": [],
+		"dependencies": [],
+		"dependants": [],
+		"useDependencyInformation": false
+	}]
+}
