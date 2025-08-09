@@ -10,8 +10,6 @@ public class Marquee extends TextGui {
     private int maxLen = 100;
     private int scrollSpeed = 20;
     private long freezeTime = 1_500_000_000L;
-    private long scrollTime = 0L;
-    private long cycleTime = 0L;
     private boolean alternate = false;
     private long startTime = System.nanoTime();
 
@@ -26,8 +24,6 @@ public class Marquee extends TextGui {
 
     public void reset() {
         startTime = System.nanoTime();
-        scrollTime = maxLen * 1_000_000_000L / scrollSpeed;
-        cycleTime = freezeTime + scrollTime + freezeTime + (alternate ? scrollTime : 0L);
     }
 
     public void setText(String text) {
@@ -59,6 +55,10 @@ public class Marquee extends TextGui {
     }
 
     public void render(double x, double y, double scale, boolean shadow) {
+        double scrollLength = Math.max(getVisibleWidth() - maxLen, 0.0);
+        long scrollTime = (long)(scrollLength * 1000 / scrollSpeed);
+        long cycleTime = freezeTime + scrollTime + freezeTime + (alternate ? scrollTime : 0L);
+
         long time = System.nanoTime() - startTime;
         // long cycleCount = time / cycleTime;
         long cycleOffset = time % cycleTime;
@@ -70,7 +70,7 @@ public class Marquee extends TextGui {
                     1.0 :
                     1.0 - (double) (cycleOffset - freezeTime - scrollTime - freezeTime) / scrollTime;
 
-        location.x = maxLen <= 0 ? x : x - Math.max(getVisibleWidth() - maxLen, 0.0) * pos;
+        location.x = maxLen <= 0 ? x : x - scrollLength * pos;
         location.y = y;
         location.s = scale;
         location.b = shadow;
