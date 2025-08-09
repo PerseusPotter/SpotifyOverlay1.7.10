@@ -20,15 +20,15 @@ public class TextGui {
     static {
         Font mojanglesFont1;
         try {
-            mojanglesFont1 = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(TextGui.class.getClassLoader().getResourceAsStream("/Mojangles.ttf")));
+            mojanglesFont1 = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(TextGui.class.getResourceAsStream("/Mojangles.ttf")));
         } catch (Exception e) {
-            // throw new RuntimeException(e);
             mojanglesFont1 = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()[0];
         }
         MOJANGLES_FONT = mojanglesFont1;
         for (Font f : GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()) {
             FONT_NAMES.put(f.getFamily().replace(" ", ""), f);
         }
+        FONT_NAMES.put("Mojangles", MOJANGLES_FONT);
     }
     public static Map<Character, Color> COLORS = new HashMap<>();
     public static Map<Character, Color> COLORS_SHADOW = new HashMap<>();
@@ -213,10 +213,7 @@ public class TextGui {
         if (fontsDirty) {
             fontsDirty = false;
             fontSize = renderSize;
-            fontMain =
-                font.equals("Mojangles") || !FONT_NAMES.containsKey(font) ?
-                    MOJANGLES_FONT.deriveFont(Font.PLAIN, renderSize) :
-                    new Font(font, Font.PLAIN, renderSize);
+            fontMain = FONT_NAMES.getOrDefault(font, MOJANGLES_FONT).deriveFont(Font.PLAIN, renderSize);
             fontMono = new Font(Font.MONOSPACED, Font.PLAIN, renderSize);
             fontBackup = new Font(Font.SANS_SERIF, Font.PLAIN, renderSize);
         }
