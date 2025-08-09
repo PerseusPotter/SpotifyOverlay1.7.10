@@ -1,12 +1,12 @@
 package com.perseuspotter.spotifyoverlay;
 
 import com.google.common.base.Strings;
-import com.perseuspotter.lib.textgui.EditGui;
 import com.perseuspotter.lib.textgui.GuiLocation;
 import com.perseuspotter.lib.textgui.Marquee;
 import com.perseuspotter.lib.textgui.TextGui;
-import com.perseuspotter.spotifyoverlay.api.SpotifyHandler;
-import com.perseuspotter.spotifyoverlay.api.SpotifyWindowsWindowHandler;
+import com.perseuspotter.spotifyoverlay.api.AIMPWindowsWindowProvider;
+import com.perseuspotter.spotifyoverlay.api.SongProvider;
+import com.perseuspotter.spotifyoverlay.api.SpotifyWindowsWindowProvider;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -16,7 +16,17 @@ import java.util.regex.Pattern;
 public class SpotifyTextGui extends TextGui {
     public static final SpotifyTextGui INSTANCE = new SpotifyTextGui(Config.getInstance().location);
 
-    public final SpotifyHandler API = SpotifyWindowsWindowHandler.INSTANCE;
+    public SongProvider API;
+    {
+        switch (Config.getInstance().provider) {
+            case "AIMP":
+                API = AIMPWindowsWindowProvider.INSTANCE;
+                break;
+            case "Spotify":
+            default:
+                API = SpotifyWindowsWindowProvider.INSTANCE;
+        }
+    }
     public final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     public final Marquee infoGui = new Marquee();
@@ -45,7 +55,7 @@ public class SpotifyTextGui extends TextGui {
         scheduler.schedule(this::schedule, Config.getInstance().refreshDelay, TimeUnit.MILLISECONDS);
     }
 
-    private void updateMarquee(SpotifyHandler.State type, String artist, String song) {
+    private void updateMarquee(SongProvider.State type, String artist, String song) {
         switch (type) {
             case Song:
                 infoGui.setText(
@@ -89,7 +99,7 @@ public class SpotifyTextGui extends TextGui {
     @Override
     public void render() {
         if (isEdit) return;
-        if (Config.getInstance().hideWhenNotOpen && API.getState().equals(SpotifyHandler.State.NotOpen)) return;
+        if (Config.getInstance().hideWhenNotOpen && API.getState().equals(SongProvider.State.NotOpen)) return;
 
         updatePrefix();
         updateMarquee(API.getState(), API.getArtist(), API.getSong());
@@ -101,7 +111,7 @@ public class SpotifyTextGui extends TextGui {
     @Override
     public void editRenderHookPre() {
         updatePrefix();
-        updateMarquee(SpotifyHandler.State.Song, "Rick Astley", "Never Gonna Give You Up");
+        updateMarquee(SongProvider.State.Song, "Rick Astley", "Never Gonna Give You Up");
     }
 
     @Override

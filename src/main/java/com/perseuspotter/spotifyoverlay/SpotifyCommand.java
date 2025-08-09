@@ -1,6 +1,8 @@
 package com.perseuspotter.spotifyoverlay;
 
 import com.perseuspotter.lib.textgui.TextGui;
+import com.perseuspotter.spotifyoverlay.api.AIMPWindowsWindowProvider;
+import com.perseuspotter.spotifyoverlay.api.SpotifyWindowsWindowProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -37,6 +39,7 @@ public class SpotifyCommand extends CommandBase {
         if (args.length == 1) return getListOfStringsMatchingLastWord(args, params);
         if (args.length == 2) {
             if (args[0].equals("font")) return getListOfStringsFromIterableMatchingLastWord(args, TextGui.FONT_NAMES.keySet());
+            if (args[0].equals("provider")) return getListOfStringsMatchingLastWord(args, "Spotify", "AIMP");
         }
         return null;
     }
@@ -99,6 +102,22 @@ public class SpotifyCommand extends CommandBase {
             public void setValue(String s) {
                 if (!TextGui.FONT_NAMES.containsKey(s)) throw new IllegalArgumentException("bad font name");
                 Config.getInstance().font = s;
+            }
+        },
+        new Property() {
+            public String getName() { return "provider"; }
+            public String getValue(Config c) { return c.provider; }
+            public void setValue(String s) {
+                switch (s) {
+                    case "Spotify":
+                        SpotifyTextGui.INSTANCE.API = SpotifyWindowsWindowProvider.INSTANCE;
+                        break;
+                    case "AIMP":
+                        SpotifyTextGui.INSTANCE.API = AIMPWindowsWindowProvider.INSTANCE;
+                        break;
+                    default: throw new IllegalArgumentException("bad provider");
+                }
+                Config.getInstance().provider = s;
             }
         }
     };

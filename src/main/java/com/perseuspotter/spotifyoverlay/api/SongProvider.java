@@ -2,7 +2,7 @@ package com.perseuspotter.spotifyoverlay.api;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public abstract class SpotifyHandler {
+public abstract class SongProvider {
     public enum State {
         Paused,
         NotOpen,

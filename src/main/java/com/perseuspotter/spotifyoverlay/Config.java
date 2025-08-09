@@ -47,4 +47,5 @@ public class Config {
     public int maxLength = 100;
     public boolean alternate = false;
     public String font = "Mojangles";
+    public String provider = "Spotify";
 }

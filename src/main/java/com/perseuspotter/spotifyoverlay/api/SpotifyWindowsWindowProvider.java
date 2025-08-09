@@ -5,8 +5,8 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 // descriptive naming i think
-public class SpotifyWindowsWindowHandler extends SpotifyHandler {
-    public static final SpotifyWindowsWindowHandler INSTANCE = new SpotifyWindowsWindowHandler();
+public class SpotifyWindowsWindowProvider extends SongProvider {
+    public static final SpotifyWindowsWindowProvider INSTANCE = new SpotifyWindowsWindowProvider();
 
     private State state = State.NotOpen;
     private String song = "Unknown Song";
